@@ -12,15 +12,17 @@ import { CiUser } from "react-icons/ci";
 import { MdSevereCold } from "react-icons/md";
 import { FaCalendarAlt, FaLongArrowAltRight } from "react-icons/fa";
 import { BiSolidEditLocation, BiSolidNetworkChart } from "react-icons/bi";
-import InfoSpan from "../InfoSpan";
-import MainTitle from "../MainTitle";
+import InfoSpan from "./SubCompoents/InfoSpan";
+import MainTitle from "./SubCompoents/MainTitle";
 import { BsIncognito } from "react-icons/bs";
 import { RiPriceTag2Fill } from "react-icons/ri";
 import { IoIosChatbubbles } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const visible = { opacity: 1, x: -20, transition: { duration: 1.2 } };
   const visibleTwo = { opacity: 1, x: 0, transition: { duration: 1.2 } };
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [cars, setCars] = useState([]);
   useEffect(() => {
@@ -31,6 +33,10 @@ const Home = () => {
     getCars();
   }, []);
 
+  // Filter cars based on the search term
+  const filteredCars = cars.filter((car) =>
+    car.model.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <main className="mt-[8rem]">
       <section className="flex flex-col-reverse ps-5 lg:ps-0 lg:flex-row justify-between items-center">
@@ -66,7 +72,10 @@ const Home = () => {
           <FaLocationDot className="border-r pr-2 ms-2 text-pramiry-700 border-pramiry-700 text-2xl" />
           <input
             type="text"
-            className="w-full p-2 focus:outline-none focus:ring-2 focus:ring-pramiry-500 rounded"
+            className="w-full p-2 focus:outline-none text-pramiry-800 focus:ring-2 focus:ring-pramiry-500 rounded bg-pramiry-50"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search by car model"
           />
           <button className="border-b rounded-r p-2 text-white bg-pramiry-700">
             Search
@@ -76,7 +85,7 @@ const Home = () => {
           <InfoSpan>POPULAR RENTAL DEALS</InfoSpan>
           <MainTitle>Most popular cars rental deals</MainTitle>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full lg:w-10/12  my-8">
-            {cars.slice(0, 4).map((car) => (
+            {filteredCars.slice(0, 4).map((car) => (
               <div
                 key={car.id}
                 className="border shadow-xl shadow-pramiry-100 rounded-xl flex flex-col justify-center items-start gap-2 "
@@ -118,16 +127,16 @@ const Home = () => {
                   <span>price</span>
                   <span>${car.price}/day</span>
                 </div>
-                <button className="border rounded-r px-20 py-2 rounded mx-auto text-white bg-pramiry-600 mb-4 flex justify-center items-center gap-3 transition duration-300 ease-in-out hover:bg-pramiry-800">
+                <Link to={`/cars/${car.id}`} className="border rounded-r px-20 py-2 rounded mx-auto text-white bg-pramiry-600 mb-4 flex justify-center items-center gap-3 transition duration-300 ease-in-out hover:bg-pramiry-800">
                   View Details <FaLongArrowAltRight />
-                </button>
+                </Link>
               </div>
             ))}
           </div>
-          <div className="w-full mx-auto">
-            <button className="border rounded-r px-20 py-2 rounded mx-auto text-pramiry-700 bg-white mb-4 flex justify-center items-center gap-3 transition duration-300 ease-in-out hover:bg-pramiry-600 hover:text-white">
-              View Details <FaLongArrowAltRight />
-            </button>
+          <div className=" mx-auto">
+            <Link to="/cars" className="border rounded-r px-20 py-2 rounded mx-auto text-pramiry-700 bg-white mb-4 flex justify-center items-center gap-3 transition duration-300 ease-in-out hover:bg-pramiry-600 hover:text-white">
+              View All <FaLongArrowAltRight />
+            </Link>
           </div>
         </div>
       </section>
